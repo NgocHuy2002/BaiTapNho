@@ -25,6 +25,15 @@ namespace BaiTapNho.Admin
         {
             InitializeComponent();
             model = new Model1();
+            var book = model.Books.ToList();
+            var user = model.Borrowers.ToList();
+            cbbSearch_Book_isBorrowed_byBookName.ItemsSource = book;
+            cbbSearch_Book_isBorrowed_byBookName.DisplayMemberPath = "Title";
+            cbbSearch_Book_isBorrowed_byBookName.SelectedValuePath = "BookID";
+
+            cbbSearch_Book_isBorrowed_byUserName.ItemsSource = user;
+            cbbSearch_Book_isBorrowed_byUserName.DisplayMemberPath = "FullName";
+            cbbSearch_Book_isBorrowed_byUserName.SelectedValuePath = "BorrowerID";
             LoadData();
         }
         public void LoadData()
@@ -45,7 +54,7 @@ namespace BaiTapNho.Admin
                              BranchID = book.BranchID,
                              BranchName = branch.BranchName,
                          }).ToList();
-            var booksHaveBorrow = (from borrow in model.BookTransactions
+/*            var booksHaveBorrow = (from borrow in model.BookTransactions
                                    where borrow.ReturnDate == null
                                    join bookBorrow in model.Books on borrow.BookID equals bookBorrow.BookID
                                    join user in model.Borrowers on borrow.BorrowerID equals user.BorrowerID
@@ -59,7 +68,7 @@ namespace BaiTapNho.Admin
                                        DueDate = borrow.DueDate,
                                        ReturnDate = borrow.ReturnDate,
                                    }).ToList();
-            haveBorrow.ItemsSource = booksHaveBorrow;
+            haveBorrow.ItemsSource = booksHaveBorrow;*/
             data.ItemsSource = books;
         }
 
@@ -149,6 +158,10 @@ namespace BaiTapNho.Admin
             if (e.PropertyName == "TransactionID")
             {
                 e.Column.Header = "ID Giao dịch";
+            }
+            if (e.PropertyName == "UserID")
+            {
+                e.Column.Header = "ID Người dùng";
             }
             else if (e.PropertyName == "BookID")
             {
@@ -257,10 +270,70 @@ namespace BaiTapNho.Admin
 
             data.ItemsSource = filteredData;
         }
-
         private void clearSearch_Click(object sender, RoutedEventArgs e)
         {
             LoadData();
+        }
+
+        private void cbbSearch_Book_isBorrowed_byUserName_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            HandleComboBoxSelectionChanged();
+        }
+
+        private void cbbSearch_Book_isBorrowed_byBookName_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            HandleComboBoxSelectionChanged();
+        }
+
+        private void HandleComboBoxSelectionChanged()
+        {
+            int selectedUserId = (cbbSearch_Book_isBorrowed_byUserName.SelectedValue != null) ? (int)cbbSearch_Book_isBorrowed_byUserName.SelectedValue : -1;
+            int selectedBookId = (cbbSearch_Book_isBorrowed_byBookName.SelectedValue != null) ? (int)cbbSearch_Book_isBorrowed_byBookName.SelectedValue : -1;
+
+            SearchInDataGrid(selectedBookId, selectedUserId);
+        }
+        private void SearchInDataGrid(int bookTransactions, int selectedUserId)
+        {
+            // Perform your search operation in the DataGrid based on the selected user
+            // For example, if your DataGrid is named "dataGridBooks" and you have a collection of books as its ItemsSource:
+            if(bookTransactions == -1 && selectedUserId == -1)
+            {
+                haveBorrow.Visibility = Visibility.Hidden;
+
+            }
+            else
+            {
+                var booksHaveBorrow = (from borrow in model.BookTransactions
+                                       where borrow.ReturnDate == null
+                                       join bookBorrow in model.Books on borrow.BookID equals bookBorrow.BookID
+                                       join user in model.Borrowers on borrow.BorrowerID equals user.BorrowerID
+                                       select new
+                                       {
+                                           TransactionID = borrow.TransactionID,
+                                           BookID = borrow.BookID,
+                                           BookName = bookBorrow.Title,
+                                           UserID = user.BorrowerID,
+                                           borrowerName = user.LastName + " " + user.FirstName,
+                                           TransactionDate = borrow.TransactionDate,
+                                           DueDate = borrow.DueDate,
+                                           ReturnDate = borrow.ReturnDate,
+                                       }).ToList();
+                var filteredBooks = booksHaveBorrow
+                   .Where(book => (bookTransactions == -1 || book.BookID == bookTransactions) && (selectedUserId == -1 || book.UserID == selectedUserId))
+                   .ToList();
+
+
+                // Update the ItemsSource of the DataGrid with the filtered data
+                haveBorrow.ItemsSource = filteredBooks;
+                haveBorrow.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void btnClear_Click(object sender, RoutedEventArgs e)
+        {
+            haveBorrow.Visibility = Visibility.Hidden;
+            cbbSearch_Book_isBorrowed_byBookName.SelectedItem = null;
+            cbbSearch_Book_isBorrowed_byUserName.SelectedItem = null;
         }
     }
 }

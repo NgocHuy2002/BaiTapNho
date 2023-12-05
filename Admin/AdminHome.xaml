@@ -18,62 +18,165 @@
         Width="1440"
         WindowState="Maximized">
     <Grid>
-        <TabControl 
-            materialDesign:ColorZoneAssist.Mode="PrimaryMid"
-            Style="{StaticResource MaterialDesignFilledTabControl}"
-            HorizontalAlignment="Left" 
-            Height="914" 
-            VerticalAlignment="Top" 
-            Width="1432" Margin="0,79,0,0">
+        <TabControl materialDesign:ColorZoneAssist.Mode="PrimaryMid"
+                    Style="{StaticResource MaterialDesignFilledTabControl}"
+                    HorizontalAlignment="Left"
+                    Height="914"
+                    VerticalAlignment="Top"
+                    Width="1432"
+                    Margin="0,79,0,0">
             <TabItem Header="Sách hiện có">
                 <Grid Background="#FFE5E5E5">
                     <Grid Margin="44,24,10,883">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="146*"/>
-                            <ColumnDefinition Width="543*"/>
+                            <ColumnDefinition Width="146*" />
+                            <ColumnDefinition Width="543*" />
                         </Grid.ColumnDefinitions>
-                        <TextBox x:Name="searchTL_DS" materialDesign:HintAssist.Hint="Thể loại" HorizontalAlignment="Left" Margin="140,4,0,-39" VerticalAlignment="Top" Width="198" Height="35" Grid.Column="1"/>
-                        <Button x:Name="search_DS" Content="Tìm kiếm" HorizontalAlignment="Left" Margin="388,4,0,-36" VerticalAlignment="Top" Width="103" Click="search_DS_Click" Grid.Column="1"/>
-                        <Button 
-                            x:Name="clearSearch"
-                            Content="Bỏ lọc" 
-                            HorizontalAlignment="Left" 
-                            Margin="529,4,0,-36"
-                            VerticalAlignment="Top" 
-                            Width="103"  Grid.Column="1" Click="clearSearch_Click"
-                            />
-                        <TextBox x:Name="searchName_DS" HorizontalAlignment="Left" Height="32" Margin="0,4,0,-36" TextWrapping="Wrap" Text="" materialDesign:HintAssist.Hint="Tên sách" VerticalAlignment="Top" Width="194"/>
-                        <TextBox x:Name="searchAuthors_DS" materialDesign:HintAssist.Hint="Tác giả" HorizontalAlignment="Left" Height="36" Margin="224,0,0,-36" Text="" VerticalAlignment="Top" Width="180" Grid.ColumnSpan="2"/>
+                        <TextBox x:Name="searchTL_DS"
+                                 materialDesign:HintAssist.Hint="Thể loại"
+                                 HorizontalAlignment="Left"
+                                 Margin="140,4,0,-39"
+                                 VerticalAlignment="Top"
+                                 Width="198"
+                                 Height="35"
+                                 Grid.Column="1" />
+                        <Button x:Name="search_DS"
+                                Content="Tìm kiếm"
+                                HorizontalAlignment="Left"
+                                Margin="388,4,0,-36"
+                                VerticalAlignment="Top"
+                                Width="103"
+                                Click="search_DS_Click"
+                                Grid.Column="1" />
+                        <Button x:Name="clearSearch"
+                                Content="Bỏ lọc"
+                                HorizontalAlignment="Left"
+                                Margin="529,4,0,-36"
+                                VerticalAlignment="Top"
+                                Width="103"
+                                Grid.Column="1"
+                                Click="clearSearch_Click" />
+                        <TextBox x:Name="searchName_DS"
+                                 HorizontalAlignment="Left"
+                                 Height="32"
+                                 Margin="0,4,0,-36"
+                                 TextWrapping="Wrap"
+                                 Text=""
+                                 materialDesign:HintAssist.Hint="Tên sách"
+                                 VerticalAlignment="Top"
+                                 Width="194" />
+                        <TextBox x:Name="searchAuthors_DS"
+                                 materialDesign:HintAssist.Hint="Tác giả"
+                                 HorizontalAlignment="Left"
+                                 Height="36"
+                                 Margin="224,0,0,-36"
+                                 Text=""
+                                 VerticalAlignment="Top"
+                                 Width="180"
+                                 Grid.ColumnSpan="2" />
                     </Grid>
-                    <DataGrid AutoGeneratingColumn="DataGrid_AutoGeneratingColumn" SelectionMode="Single" x:Name="data" HorizontalAlignment="Left" Height="792" Margin="0,74,0,0" VerticalAlignment="Top" Width="1432" SelectionChanged="data_SelectionChanged"/>
+                    <DataGrid AutoGeneratingColumn="DataGrid_AutoGeneratingColumn"
+                              SelectionMode="Single"
+                              x:Name="data"
+                              HorizontalAlignment="Left"
+                              Height="792"
+                              Margin="0,74,0,0"
+                              VerticalAlignment="Top"
+                              Width="1432"
+                              SelectionChanged="data_SelectionChanged" />
                 </Grid>
             </TabItem>
             <TabItem Header="Sách chưa trả">
                 <Grid Background="#FFE5E5E5">
-                    <DataGrid SelectionMode="Single" x:Name="haveBorrow" AutoGeneratingColumn="DataGrid_AutoGeneratingColumn" HorizontalAlignment="Left" Height="792" Margin="0,74,0,0" VerticalAlignment="Top" Width="1432">
+                    <DataGrid SelectionMode="Single"
+                              x:Name="haveBorrow"
+                              Visibility="Hidden"
+                              AutoGeneratingColumn="DataGrid_AutoGeneratingColumn"
+                              HorizontalAlignment="Left"
+                              Height="792"
+                              Margin="0,74,0,0"
+                              VerticalAlignment="Top"
+                              Width="1432">
                         <DataGrid.Columns>
                             <DataGridTemplateColumn Header="Action">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Button Content="Đã trả sách" x:Name="returnDate" Click="returnDate_Click"/>
+                                        <Button Content="Đã trả sách"
+                                                x:Name="returnDate"
+                                                Click="returnDate_Click" />
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
                         </DataGrid.Columns>
                     </DataGrid>
+                    <ComboBox HorizontalAlignment="Left"
+                              x:Name="cbbSearch_Book_isBorrowed_byBookName"
+                              materialDesign:HintAssist.Hint="Tên sách"
+                              Margin="81,28,0,0"
+                              VerticalAlignment="Top"
+                              Width="210"
+                              SelectionChanged="cbbSearch_Book_isBorrowed_byBookName_SelectionChanged" />
+                    <ComboBox HorizontalAlignment="Left"
+                              SelectionChanged="cbbSearch_Book_isBorrowed_byUserName_SelectionChanged"
+                              x:Name="cbbSearch_Book_isBorrowed_byUserName"
+                              materialDesign:HintAssist.Hint="Tên người mượn"
+                              Margin="409,28,0,0"
+                              VerticalAlignment="Top"
+                              Width="210" />
+                    <Button Content="Bỏ lọc"
+                            x:Name="btnClear"
+                            HorizontalAlignment="Left"
+                            Margin="678,21,0,0"
+                            VerticalAlignment="Top"
+                            Width="131"
+                            Click="btnClear_Click" />
 
                 </Grid>
             </TabItem>
         </TabControl>
-        <materialDesign:Card HorizontalAlignment="Left" Margin="1046,10,0,0" VerticalAlignment="Top" Height="64" Width="300">
-            <Grid Margin="10" VerticalAlignment="Center">
-                <Label VerticalContentAlignment="Center" Content="Admin" HorizontalAlignment="Left" VerticalAlignment="Top" Height="35" Width="88"/>
-                <Button x:Name="logout" Content="Đăng xuất" HorizontalAlignment="Left" Margin="113,0,0,0" VerticalAlignment="Top" Width="133" Click="logout_Click"/>
+        <materialDesign:Card HorizontalAlignment="Left"
+                             Margin="1046,10,0,0"
+                             VerticalAlignment="Top"
+                             Height="64"
+                             Width="300">
+            <Grid Margin="10"
+                  VerticalAlignment="Center">
+                <Label VerticalContentAlignment="Center"
+                       Content="Admin"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top"
+                       Height="35"
+                       Width="88" />
+                <Button x:Name="logout"
+                        Content="Đăng xuất"
+                        HorizontalAlignment="Left"
+                        Margin="113,0,0,0"
+                        VerticalAlignment="Top"
+                        Width="133"
+                        Click="logout_Click" />
             </Grid>
         </materialDesign:Card>
-        <Button x:Name="btnAdd" Content="Thêm sách mới" HorizontalAlignment="Left" Margin="72,24,0,0" VerticalAlignment="Top" Width="223" Click="btnAdd_Click"/>
-        <Button x:Name="btnEdit" Content="Chỉnh sửa thông tin sách" HorizontalAlignment="Left" Margin="358,24,0,0" VerticalAlignment="Top" Width="223" Click="btnEdit_Click"/>
-        <Button x:Name="btnDelete" Content="Xóa sách hiện có" HorizontalAlignment="Left" Margin="644,24,0,0" VerticalAlignment="Top" Width="223" Click="btnDelete_Click"/>
+        <Button x:Name="btnAdd"
+                Content="Thêm sách mới"
+                HorizontalAlignment="Left"
+                Margin="72,24,0,0"
+                VerticalAlignment="Top"
+                Width="223"
+                Click="btnAdd_Click" />
+        <Button x:Name="btnEdit"
+                Content="Chỉnh sửa thông tin sách"
+                HorizontalAlignment="Left"
+                Margin="358,24,0,0"
+                VerticalAlignment="Top"
+                Width="223"
+                Click="btnEdit_Click" />
+        <Button x:Name="btnDelete"
+                Content="Xóa sách hiện có"
+                HorizontalAlignment="Left"
+                Margin="644,24,0,0"
+                VerticalAlignment="Top"
+                Width="223"
+                Click="btnDelete_Click" />
 
     </Grid>
 </Window>
